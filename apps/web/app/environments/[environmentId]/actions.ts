@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@formbricks/database";
+import { captureTelemetry } from "@formbricks/lib/telemetry";
 import { Team } from "@prisma/client";
 
 export async function createTeam(teamName: string, ownerUserId: string): Promise<Team> {
@@ -94,4 +95,29 @@ export async function createTeam(teamName: string, ownerUserId: string): Promise
   });
 
   return newTeam;
+}
+
+export async function deleteSurveyAction(surveyId: string) {
+  const deletedSurvey = await prisma.survey.delete({
+    where: {
+      id: surveyId,
+    },
+  });
+  return deletedSurvey;
+}
+
+export async function createSurveyAction(environmentId: string, surveyBody: any) {
+  const survey = await prisma.survey.create({
+    data: {
+      ...surveyBody,
+      environment: {
+        connect: {
+          id: environmentId,
+        },
+      },
+    },
+  });
+  captureTelemetry("survey created");
+
+  return survey;
 }

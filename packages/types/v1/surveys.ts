@@ -208,7 +208,7 @@ export const ZSurvey = z.object({
   displayOption: z.enum(["displayOnce", "displayMultiple", "respondMultiple"]),
   autoClose: z.union([z.number(), z.null()]),
   triggers: z.array(ZEventClass),
-  redirectUrl: z.string().url().optional(),
+  redirectUrl: z.string().url().nullable(),
   recontactDays: z.union([z.number(), z.null()]),
   questions: ZSurveyQuestions,
   thankYouCard: ZSurveyThankYouCard,
@@ -227,4 +227,9 @@ export const ZSurveyWithAnalytics = ZSurvey.extend({
   surveyClosedMessage: ZSurveyClosedMessage,
 });
 
+export const ZSurveyWithResponseCount = ZSurvey.extend({
+  responses: z.number(),
+});
+
 export type TSurveyWithAnalytics = z.infer<typeof ZSurveyWithAnalytics>;
+export type TSurveyWithResponseCount = z.infer<typeof ZSurveyWithResponseCount>;
