@@ -11,7 +11,7 @@ import {
 } from "@/components/shared/DropdownMenu";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import SurveyStatusIndicator from "@/components/shared/SurveyStatusIndicator";
-import { createSurvey, duplicateSurvey } from "@/lib/surveys/surveys";
+import { duplicateSurvey } from "@/lib/surveys/surveys";
 import { Badge } from "@formbricks/ui";
 import {
   ComputerDesktopIcon,
@@ -57,7 +57,7 @@ export default function SurveysList({
   const router = useRouter();
   const [activeSurvey, setActiveSurvey] = useState("" as any);
   const [_, setActiveSurveyIdx] = useState("" as any);
-  const [otherEnvironment, setOtherEnvironment] = useState("" as any);
+  const [otherEnvironment] = useState("" as any);
 
   useEffect(() => {
     if (environment) {

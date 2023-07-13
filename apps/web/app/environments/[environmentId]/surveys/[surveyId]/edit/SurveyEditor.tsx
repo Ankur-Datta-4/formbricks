@@ -11,6 +11,7 @@ import SettingsView from "./SettingsView";
 import QuestionsAudienceTabs from "./QuestionsAudienceTabs";
 import QuestionsView from "./QuestionsView";
 import SurveyMenuBar from "./SurveyMenuBar";
+import { useEnvironment } from "@/lib/environments/environments";
 
 interface SurveyEditorProps {
   environmentId: string;
@@ -21,9 +22,9 @@ export default function SurveyEditor({ environmentId, surveyId }: SurveyEditorPr
   const [activeView, setActiveView] = useState<"questions" | "settings">("questions");
   const [activeQuestionId, setActiveQuestionId] = useState<string | null>(null);
   const [localSurvey, setLocalSurvey] = useState<Survey | null>();
-
   const { survey, isLoadingSurvey, isErrorSurvey } = useSurvey(environmentId, surveyId);
   const { product, isLoadingProduct, isErrorProduct } = useProduct(environmentId);
+  const { environment, isLoadingEnvironment, isErrorEnvironment } = useEnvironment(environmentId);
 
   useEffect(() => {
     if (survey) {
@@ -37,11 +38,11 @@ export default function SurveyEditor({ environmentId, surveyId }: SurveyEditorPr
     }
   }, [survey]);
 
-  if (isLoadingSurvey || isLoadingProduct || !localSurvey) {
+  if (isLoadingSurvey || isLoadingProduct || !localSurvey || isLoadingEnvironment) {
     return <LoadingSpinner />;
   }
 
-  if (isErrorSurvey || isErrorProduct) {
+  if (isErrorSurvey || isErrorProduct || isErrorEnvironment) {
     return <ErrorComponent />;
   }
 
@@ -81,6 +82,8 @@ export default function SurveyEditor({ environmentId, surveyId }: SurveyEditorPr
             questions={localSurvey.questions}
             brandColor={product.brandColor}
             environmentId={environmentId}
+            product={product}
+            environment={environment}
             surveyType={localSurvey.type}
             thankYouCard={localSurvey.thankYouCard}
             previewType={localSurvey.type === "web" ? "modal" : "fullwidth"}
